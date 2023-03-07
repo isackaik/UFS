@@ -4,17 +4,20 @@ import java.util.List;
 public class Grafo {
 
     private int numVertices;
+    private boolean[] visitado;
     private List<List<Integer>> listaAdjacencia;
     private List<Integer> grauVertices;
 
-    public Grafo(int numvertices) {
-        this.numVertices = numvertices;
+    public Grafo(int numVertices) {
+        this.numVertices = numVertices;
         listaAdjacencia = new ArrayList<>();
         grauVertices = new ArrayList<>();
+        visitado = new boolean[numVertices];
 
         // cria uma lista para cada vertice
         for (int i = 0; i < this.numVertices; i++) {
             listaAdjacencia.add(new ArrayList<>());
+            visitado[i] = false;
             grauVertices.add(0);
         }
 
@@ -101,6 +104,15 @@ public class Grafo {
         return true;
     }
 
+    public void dfs(List<List<Integer>> listaAdjacencia, int v) {
+        visitado[v] = true;
+        System.out.println(v);
+        for (int i = 0; i < numVertices; i++) {
+            if (listaAdjacencia.get(v).get(i) != 0 && visitado[i] == false)
+                dfs(listaAdjacencia, i);
+        }
+    }
+
     public static void main(String[] args) {
 
         Grafo grafo = new Grafo(8);
@@ -114,12 +126,6 @@ public class Grafo {
         grafo.adicionarAresta(1, 3);
         grafo.adicionarAresta(3, 6);
 
-        System.out.println(grafo.ehEuleriano(grafo));
-        System.out.println(grafo.verificaGrau(7));
-        System.out.println(grafo.verificaVizinho(1, 3));
-        System.out.println(grafo.verificaVizinho(3, 2));
-        System.out.println(grafo.removerAresta(1, 3));
-        System.out.println(grafo.verificaVizinho(3, 1));
-
+        grafo.dfs(grafo.listaAdjacencia, 2);
     }
 }
