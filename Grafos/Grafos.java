@@ -8,7 +8,8 @@ public class Grafos {
     int[] profundidadeEntrada;
     int[] profundidadeSaida;
     int[] high;
-    int entrada = 0, saida = 0;
+    int[] comp;
+    int entrada = 0, saida = 0, componentes = 0;
     List<List<Integer>> listaAdjacencia;
 
     public Grafos(List<List<Integer>> listaAdjacencia, int numVertices) {
@@ -17,6 +18,7 @@ public class Grafos {
         pilha = new Stack<>();
         profundidadeEntrada = new int[numVertices + 1];
         profundidadeSaida = new int[numVertices + 1];
+        comp = new int[numVertices + 1];
         high = new int[numVertices + 1];
     }
 
@@ -34,20 +36,31 @@ public class Grafos {
         System.out.println(pilha.pop());
     }
 
-    public void componentes(int v) {
-        pilha.push(v);
+    public int componentes(int v) {
         profundidadeEntrada[v] = ++entrada;
+        pilha.push(v);
         high[v] = profundidadeEntrada[v];
         for (int i : listaAdjacencia.get(v)) {
-            /*if(profundidadeEntrada[i] == 0){
+            if (profundidadeEntrada[i] == 0) {
                 componentes(i);
                 high[v] = (high[v] <= high[i]) ? high[v] : high[i];
+            } else {
+                if ((profundidadeEntrada[i] <= profundidadeEntrada[v]) && pilha.contains(i)) {
+                    high[v] = (high[v] <= profundidadeEntrada[i]) ? high[v] : profundidadeEntrada[i];
+                }
             }
-            else {
-                if (profundidadeEntrada[i] <= profundidadeEntrada[v] && )
-            }*/
         }
 
+        if (high[v] == profundidadeEntrada[v]) {
+            componentes++;
+            int x = 0;
+            do {
+                x = pilha.pop();
+                comp[x] = componentes;
+            } while (x == v);
+        }
+
+        return componentes;
     }
 
     public static void main(String[] args) {
@@ -72,7 +85,9 @@ public class Grafos {
         lista.get(9).add(7);
         lista.get(7).add(5);
 
-        grafo.dfsDigrafo(1);
+        // grafo.dfsDigrafo(1);
+        System.out.println(grafo.componentes(1));
+        System.out.println("Verificando");
 
     }
 }
