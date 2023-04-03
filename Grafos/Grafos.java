@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Stack;
 
@@ -36,31 +37,36 @@ public class Grafos {
         System.out.println(pilha.pop());
     }
 
-    public int componentes(int v) {
+    public void componentes(int v) {
         profundidadeEntrada[v] = ++entrada;
         pilha.push(v);
         high[v] = profundidadeEntrada[v];
         for (int i : listaAdjacencia.get(v)) {
             if (profundidadeEntrada[i] == 0) {
                 componentes(i);
-                high[v] = (high[v] <= high[i]) ? high[v] : high[i];
+                high[v] = Math.min(high[v], high[i]);
             } else {
                 if ((profundidadeEntrada[i] <= profundidadeEntrada[v]) && pilha.contains(i)) {
-                    high[v] = (high[v] <= profundidadeEntrada[i]) ? high[v] : profundidadeEntrada[i];
+                    high[v] = Math.min(high[v], profundidadeEntrada[i]);
                 }
             }
         }
 
         if (high[v] == profundidadeEntrada[v]) {
             componentes++;
-            int x = 0;
+            int x;
             do {
                 x = pilha.pop();
                 comp[x] = componentes;
-            } while (x == v);
+            } while (x != v);
         }
+    }
 
-        return componentes;
+    public void verificarVertices(){
+        for(int i = 1; i <= numVertices; i++){
+            if(profundidadeEntrada[i] == 0)
+                componentes(i);
+        }
     }
 
     public static void main(String[] args) {
@@ -85,8 +91,9 @@ public class Grafos {
         lista.get(9).add(7);
         lista.get(7).add(5);
 
-        // grafo.dfsDigrafo(1);
-        System.out.println(grafo.componentes(1));
+        grafo.componentes(1);
+        grafo.verificarVertices();
+        System.out.println(grafo.componentes);
         System.out.println("Verificando");
 
     }
