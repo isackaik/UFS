@@ -7,6 +7,7 @@ import java.util.Scanner;
 
 public class MakeItConnected {
 
+
     public static void main(String[] args) {
         Scanner input = new Scanner(System.in);
         int v = input.nextInt();
